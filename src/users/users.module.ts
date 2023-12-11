@@ -1,8 +1,15 @@
 import { Module } from '@nestjs/common';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Users } from 'src/entities/Users';
+import { WorkspaceMembers } from 'src/entities/WorkspaceMembers';
+import { ChannelMembers } from 'src/entities/ChannelMembers';
 
 @Module({
+  imports: [
+    TypeOrmModule.forFeature([Users, WorkspaceMembers, ChannelMembers]),
+  ],
   controllers: [UsersController],
   providers: [UsersService],
 })

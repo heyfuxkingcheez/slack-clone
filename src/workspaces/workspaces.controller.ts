@@ -1,14 +1,36 @@
-import { Controller, Post, Get, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Get,
+  Delete,
+  Param,
+  ParseIntPipe,
+  Body,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { WorkspacesService } from './workspaces.service';
+import { CreateWorkspaceDto } from './dto/create.workspace.dto';
+import { Users } from 'src/entities/Users';
+import { User } from 'src/common/decorators/user.decorator';
 
 @Controller('api/workspaces')
 @ApiTags('WORKSPACES')
 export class WorkspacesController {
+  constructor(private workspacesService: WorkspacesService) {}
+
   @Get()
-  getMyWorkspaces() {}
+  getMyWorkspaces(@User() user: Users) {
+    return this.workspacesService.findMyWorkspaces(user.id);
+  }
 
   @Post()
-  createWorkspaces() {}
+  createWorkspaces(@User() user: Users, @Body() body: CreateWorkspaceDto) {
+    return this.workspacesService.createWorkspace(
+      body.workspace,
+      body.url,
+      user.id,
+    );
+  }
 
   @Get(':url/members')
   getAllMembersFromWorkSpace() {}
